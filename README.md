@@ -50,30 +50,30 @@ kubeadm join 10.0.0.4:6443 --token t299v2.c8vcbm33kfi1x0nt \
     --discovery-token-ca-cert-hash sha256:a5b1372829885851ca72ec1502414460c2ed5124e83704c8c07b3d49b137a229
 ```
 
-### Step 5 Enable `kubectl` command on master without root access (Master only)
+#### Step 5 Enable `kubectl` command on master without root access (Master only)
 ```
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
-### Step 6 Join worker nodes to cluster (Nodes only)
+#### Step 6 Join worker nodes to cluster (Nodes only)
 ```
 sudo kubeadm join 10.0.0.4:6443 --token t299v2.c8vcbm33kfi1x0nt \
     --discovery-token-ca-cert-hash sha256:a5b1372829885851ca72ec1502414460c2ed5124e83704c8c07b3d49b137a229
 ```
 
-### Step 7 Install one of the CNI plugin on master (Master only)
-#### Option: Calico
+#### Step 7 Install one of the CNI plugin on master (Master only)
+##### Option: Calico
 ```
 kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 ```
-#### Option: Weave net CNI
+##### Option: Weave net CNI
 ```
 kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
 ```
 
-### Step 8 Verify K8s working (Master only)
+#### Step 8 Verify K8s working (Master only)
 ```
 [watch] kubectl get nodes
 [watch] kubectl get pods --all-namespaces
