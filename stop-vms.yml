@@ -3,13 +3,12 @@
   connection: local
   tasks:
   - name: Get all VMs within resource group
-    community.azure.azure_rm_resourcegroup_info:
+    azure_rm_virtualmachine_info:
       name: k8s-rg
-      list_resources: yes
     register: vms
   - name: Power Off all VMs
     azure_rm_virtualmachine:
       resource_group: k8s-rg
-      name: {{ item }}
+      name: "{{ item }}"
       started: no
-    loop: {{ vms.resources  | selectattr('type', 'equalto', 'Microsoft.Compute/virtualMachines') | map(attribute='name') }}
+    loop: "{{ vms.resources | map(attribute='name') }}"

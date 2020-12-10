@@ -16,24 +16,6 @@ resource "azurerm_resource_group" "rg" {
   location = "southeastasia"
 }
 
-# resource "azurerm_network_security_group" "nsg" {
-#   name                = "${local.prefix}-nsg"
-#   location            = azurerm_resource_group.rg.location
-#   resource_group_name = azurerm_resource_group.rg.name
-
-#   security_rule {
-#     name                       = "Port_80"
-#     priority                   = 100
-#     direction                  = "Inbound"
-#     access                     = "Allow"
-#     protocol                   = "Tcp"
-#     source_port_range          = "*"
-#     destination_port_range     = "80"
-#     source_address_prefix      = "*"
-#     destination_address_prefix = "*"
-#   }
-# }
-
 resource "azurerm_virtual_network" "vnet" {
   name                = "k8s-vnet"
   resource_group_name = azurerm_resource_group.rg.name
@@ -49,7 +31,7 @@ resource "azurerm_subnet" "default" {
 }
 
 resource "azurerm_subnet" "jumpbox" {
-  name                 = "AzureBastionSubnet"
+  name                 = "jumpboxSubnet"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = ["10.0.1.0/24"]
@@ -77,4 +59,11 @@ module "node02" {
     rg       = azurerm_resource_group.rg.name
     location = azurerm_resource_group.rg.location
     subnetId = azurerm_subnet.default.id
+}
+
+module "jumpbox" {
+    source   = "./modules/jumpbox"
+    rg       = azurerm_resource_group.rg.name
+    location = azurerm_resource_group.rg.location
+    subnetId = azurerm_subnet.jumpbox.id
 }
